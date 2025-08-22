@@ -1,0 +1,20 @@
+{
+  "name": "monorepo-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "dotenv -e .env turbo run dev --env-mode=loose",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "test": "turbo test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.14.0",
+  "devDependencies": {
+    "dotenv-cli": "^10.0.0",
+    "turbo": "^2.5.6"
+  }
+}
