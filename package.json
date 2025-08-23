@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev": "dotenv -e .env turbo run dev --env-mode=loose",
     "build": "turbo build",
     "lint": "turbo lint",
-    "test": "turbo test"
+    "test": "turbo test",
+    "generate" : "turbo run generate --env-mode=loose"
   },
   "keywords": [],
   "author": "",
