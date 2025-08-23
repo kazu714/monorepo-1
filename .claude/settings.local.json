@@ -3,14 +3,16 @@
     "allow": [
       "mcp__ide__getDiagnostics",
       "Bash(npm run dev:*)",
-      "Bash(pnpm run:*)"
+      "Bash(pnpm run:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": [],
     "additionalDirectories": [
       "C:\\c\\Users\\user\\programing\\monorepo-1\\apps",
       "C:\\c\\Users\\user\\programing",
-      "c:\\Users\\user\\programing\\monorepo-1\\apps\\api\\src\\schemas"
+      "c:\\Users\\user\\programing\\monorepo-1\\apps\\api\\src\\schemas",
+      "C:\\"
     ]
   }
 }

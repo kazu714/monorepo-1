@@ -1,0 +1,3 @@
+素のgraphqlを見てみたかったので作ったフォルダ
+turboに含めたくないので
+package.jsonで、div:ignoreとしている
