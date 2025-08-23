@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(npm run dev:*)",
+      "Bash(pnpm run:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "additionalDirectories": [
+      "C:\\c\\Users\\user\\programing\\monorepo-1\\apps",
+      "C:\\c\\Users\\user\\programing"
+    ]
+  }
+}
