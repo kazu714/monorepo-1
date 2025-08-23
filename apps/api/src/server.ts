@@ -1,11 +1,11 @@
 import { createServer } from 'node:http';
 import { createYoga } from 'graphql-yoga';
 import { schema } from './schema';
-import { prisma } from './context';
+import { createContext } from './context';
 
 const yoga = createYoga({
   schema,
-  context: prisma,
+  context: () => createContext(),
   graphqlEndpoint: '/graphql',
 });
 

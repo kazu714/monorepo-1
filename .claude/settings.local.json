@@ -9,7 +9,8 @@
     "ask": [],
     "additionalDirectories": [
       "C:\\c\\Users\\user\\programing\\monorepo-1\\apps",
-      "C:\\c\\Users\\user\\programing"
+      "C:\\c\\Users\\user\\programing",
+      "c:\\Users\\user\\programing\\monorepo-1\\apps\\api\\src\\schemas"
     ]
   }
 }
