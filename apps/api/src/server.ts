@@ -9,7 +9,7 @@ const yoga = createYoga({
   graphqlEndpoint: '/graphql',
 });
 
-const port = Number(process.env.API_PORT ?? 3001);
+const port = Number(process.env.API_PORT ?? 4000);
 const server = createServer(yoga);
 
 server.listen(port, () => {
