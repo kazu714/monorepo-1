@@ -1,6 +1,31 @@
-import { useState, useEffect } from 'react';
-import { graphqlClient } from '~/lib/graphql';
-import { GET_EXAMPLES, CREATE_EXAMPLE } from '~/lib/queries';
+import type { LoaderFunctionArgs, ActionFunctionArgs, MetaFunction } from "react-router";
+import { useLoaderData, Form, redirect, useActionData, useNavigation, Link } from "react-router";
+import { graphqlClient } from "~/lib/graphql";
+import { gql } from "graphql-request";
+
+const GET_EXAMPLES_QUERY = gql`
+  query GetExamples {
+    examples {
+      id
+      name
+      value
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+const CREATE_EXAMPLE_MUTATION = gql`
+  mutation CreateExample($name: String!, $value: String!) {
+    createExample(name: $name, value: $value) {
+      id
+      name
+      value
+      createdAt
+      updatedAt
+    }
+  }
+`;
 
 interface Example {
   id: string;
@@ -10,56 +35,68 @@ interface Example {
   updatedAt: string;
 }
 
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Examples - React Router App" },
+    { name: "description", content: "Manage examples with GraphQL" },
+  ];
+};
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  try {
+    const examples_data = await graphqlClient.request<{ examples: Example[] }>(GET_EXAMPLES_QUERY);
+    return { examples: examples_data.examples };
+  } catch (graphql_error) {
+    console.error('Error fetching examples:', graphql_error);
+    return { examples: [] };
+  }
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const form_data = await request.formData();
+  const example_name = form_data.get("name") as string;
+  const example_value = form_data.get("value") as string;
+
+  if (!example_name?.trim() || !example_value?.trim()) {
+    return { error: "Name and value are required" };
+  }
+
+  try {
+    await graphqlClient.request(CREATE_EXAMPLE_MUTATION, { 
+      name: example_name, 
+      value: example_value 
+    });
+    return redirect("/example");
+  } catch (graphql_error) {
+    console.error('Error creating example:', graphql_error);
+    return { error: "Failed to create example" };
+  }
+}
+
 export default function Examples() {
-  const [examples, setExamples] = useState<Example[]>([]);
-  const [name, setName] = useState('');
-  const [value, setValue] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const fetchExamples = async () => {
-    try {
-      console.log('Fetching examples...');
-      const data = await graphqlClient.request<{ examples: Example[] }>(GET_EXAMPLES);
-      setExamples(data.examples);
-    } catch (error) {
-      console.error('Error fetching examples:', error);
-    }
-  };
-
-  const createExample = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !value.trim()) return;
-    
-    setLoading(true);
-    try {
-      await graphqlClient.request(CREATE_EXAMPLE, { name, value });
-      setName('');
-      setValue('');
-      await fetchExamples();
-    } catch (error) {
-      console.error('Error creating example:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchExamples();
-  }, []);
+  const { examples } = useLoaderData<typeof loader>();
+  const action_data = useActionData<typeof action>();
+  const navigation = useNavigation();
+  const is_submitting = navigation.state === "submitting";
 
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8">Examples</h1>
       
       <div className="mb-8">
+        <Link to="/home" className="text-blue-500 hover:underline">&#8592; Back to Home</Link>
         <h2 className="text-xl font-semibold mb-4">Create New Example</h2>
-        <form onSubmit={createExample} className="space-y-4">
+        <Form method="post" className="space-y-4">
+          {action_data?.error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {action_data.error}
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium mb-2">Name:</label>
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="name"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -68,20 +105,19 @@ export default function Examples() {
             <label className="block text-sm font-medium mb-2">Value:</label>
             <input
               type="text"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+              name="value"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
           <button
             type="submit"
-            disabled={loading}
+            disabled={is_submitting}
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
           >
-            {loading ? 'Creating...' : 'Create Example'}
+            {is_submitting ? 'Creating...' : 'Create Example'}
           </button>
-        </form>
+        </Form>
       </div>
 
       <div>
