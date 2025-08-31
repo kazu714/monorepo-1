@@ -1,6 +1,17 @@
-import type { LoaderFunctionArgs, ActionFunctionArgs, MetaFunction } from "react-router";
-import { useLoaderData, Form, redirect, useActionData, useNavigation, Link } from "react-router";
-import { graphqlClient } from "~/lib/graphql";
+import type {
+  LoaderFunctionArgs,
+  ActionFunctionArgs,
+  MetaFunction,
+} from "react-router";
+import {
+  useLoaderData,
+  Form,
+  redirect,
+  useActionData,
+  useNavigation,
+  Link,
+} from "react-router";
+import { graphqlClient } from "~/util/graphql";
 import { gql } from "graphql-request";
 import { useState } from "react";
 
@@ -65,10 +76,12 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
-    const todos_data = await graphqlClient.request<{ todos: Todo[] }>(GET_TODOS_QUERY);
+    const todos_data = await graphqlClient.request<{ todos: Todo[] }>(
+      GET_TODOS_QUERY
+    );
     return { todos: todos_data.todos };
   } catch (graphql_error) {
-    console.error('Error fetching todos:', graphql_error);
+    console.error("Error fetching todos:", graphql_error);
     return { todos: [] };
   }
 }
@@ -85,12 +98,12 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     try {
-      await graphqlClient.request(CREATE_TODO_MUTATION, { 
-        title: todo_title
+      await graphqlClient.request(CREATE_TODO_MUTATION, {
+        title: todo_title,
       });
       return redirect("/todos");
     } catch (graphql_error) {
-      console.error('Error creating todo:', graphql_error);
+      console.error("Error creating todo:", graphql_error);
       return { error: "Failed to create todo" };
     }
   }
@@ -100,13 +113,13 @@ export async function action({ request }: ActionFunctionArgs) {
     const completed = form_data.get("completed") === "true";
 
     try {
-      await graphqlClient.request(UPDATE_TODO_MUTATION, { 
+      await graphqlClient.request(UPDATE_TODO_MUTATION, {
         id: todo_id,
-        completed: !completed
+        completed: !completed,
       });
       return redirect("/todos");
     } catch (graphql_error) {
-      console.error('Error updating todo:', graphql_error);
+      console.error("Error updating todo:", graphql_error);
       return { error: "Failed to update todo" };
     }
   }
@@ -120,13 +133,13 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     try {
-      await graphqlClient.request(UPDATE_TODO_MUTATION, { 
+      await graphqlClient.request(UPDATE_TODO_MUTATION, {
         id: todo_id,
-        title: todo_title
+        title: todo_title,
       });
       return redirect("/todos");
     } catch (graphql_error) {
-      console.error('Error updating todo:', graphql_error);
+      console.error("Error updating todo:", graphql_error);
       return { error: "Failed to update todo" };
     }
   }
@@ -135,12 +148,12 @@ export async function action({ request }: ActionFunctionArgs) {
     const todo_id = parseInt(form_data.get("id") as string);
 
     try {
-      await graphqlClient.request(DELETE_TODO_MUTATION, { 
-        id: todo_id
+      await graphqlClient.request(DELETE_TODO_MUTATION, {
+        id: todo_id,
       });
       return redirect("/todos");
     } catch (graphql_error) {
-      console.error('Error deleting todo:', graphql_error);
+      console.error("Error deleting todo:", graphql_error);
       return { error: "Failed to delete todo" };
     }
   }
@@ -169,9 +182,11 @@ export default function Todos() {
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8">Todos</h1>
-      
+
       <div className="mb-8">
-        <Link to="/home" className="text-blue-500 hover:underline">&#8592; Back to Home</Link>
+        <Link to="/home" className="text-blue-500 hover:underline">
+          &#8592; Back to Home
+        </Link>
         <h2 className="text-xl font-semibold mb-4">Create New Todo</h2>
         <Form method="post" className="space-y-4">
           {action_data?.error && (
@@ -194,7 +209,7 @@ export default function Todos() {
             disabled={is_submitting}
             className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:opacity-50"
           >
-            {is_submitting ? 'Creating...' : 'Create Todo'}
+            {is_submitting ? "Creating..." : "Create Todo"}
           </button>
         </Form>
       </div>
@@ -206,26 +221,36 @@ export default function Todos() {
         ) : (
           <div className="space-y-4">
             {todos.map((todo) => (
-              <div key={todo.id} className="border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+              <div
+                key={todo.id}
+                className="border border-gray-200 rounded-lg p-4 flex items-center justify-between"
+              >
                 <div className="flex items-center space-x-4 flex-1">
                   <Form method="post" className="inline">
                     <input type="hidden" name="action" value="toggle" />
                     <input type="hidden" name="id" value={todo.id} />
-                    <input type="hidden" name="completed" value={todo.completed.toString()} />
+                    <input
+                      type="hidden"
+                      name="completed"
+                      value={todo.completed.toString()}
+                    />
                     <button
                       type="submit"
                       className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                        todo.completed 
-                          ? 'bg-green-500 border-green-500 text-white' 
-                          : 'border-gray-300 hover:border-green-500'
+                        todo.completed
+                          ? "bg-green-500 border-green-500 text-white"
+                          : "border-gray-300 hover:border-green-500"
                       }`}
                     >
-                      {todo.completed && '✓'}
+                      {todo.completed && "✓"}
                     </button>
                   </Form>
-                  
+
                   {editing_todo_id === todo.id ? (
-                    <Form method="post" className="flex items-center space-x-2 flex-1">
+                    <Form
+                      method="post"
+                      className="flex items-center space-x-2 flex-1"
+                    >
                       <input type="hidden" name="action" value="update" />
                       <input type="hidden" name="id" value={todo.id} />
                       <input
@@ -253,13 +278,23 @@ export default function Todos() {
                   ) : (
                     <>
                       <div className="flex-1">
-                        <h3 className={`font-semibold ${todo.completed ? 'line-through text-gray-500' : ''}`}>
+                        <h3
+                          className={`font-semibold ${
+                            todo.completed ? "line-through text-gray-500" : ""
+                          }`}
+                        >
                           {todo.title}
                         </h3>
                         <div className="text-sm text-gray-400 mt-1">
-                          <span>Created: {new Date(todo.createdAt).toLocaleDateString()}</span>
+                          <span>
+                            Created:{" "}
+                            {new Date(todo.createdAt).toLocaleDateString()}
+                          </span>
                           {todo.updatedAt !== todo.createdAt && (
-                            <span className="ml-4">Updated: {new Date(todo.updatedAt).toLocaleDateString()}</span>
+                            <span className="ml-4">
+                              Updated:{" "}
+                              {new Date(todo.updatedAt).toLocaleDateString()}
+                            </span>
                           )}
                         </div>
                       </div>
@@ -276,7 +311,11 @@ export default function Todos() {
                           <button
                             type="submit"
                             onClick={(e) => {
-                              if (!confirm('Are you sure you want to delete this todo?')) {
+                              if (
+                                !confirm(
+                                  "Are you sure you want to delete this todo?"
+                                )
+                              ) {
                                 e.preventDefault();
                               }
                             }}
