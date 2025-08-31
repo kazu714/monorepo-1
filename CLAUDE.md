@@ -19,15 +19,14 @@
 monorepo-1/
 ├── apps/
 │   ├── web/           # React Router v7 フロントエンド
+│   |   └──_auth/      # 認証済みルート
 │   ├── api/           # GraphQL API (メイン)
 │   └── api-2/         # 別のAPI実装（実験用）
 ├── packages/
 │   └── db/            # Prisma スキーマとマイグレーション
 └── .env               # 環境変数（DATABASE_URLなど）
+
 ```
-
-
-
 ## 共通コマンド
 
 - `pnpm dev` : モノレポのプロジェクトの開発サーバーの並列実行
@@ -42,17 +41,16 @@ monorepo-1/
   - solid原則に基づく
   - TypeScriptの型安全性を最大限活用
 - web
-  - ファイルベースルーティングを使用する
-  - フォルダ名が URL パスを表す（例: `routes/_auth.todo/route.tsx` → `/todo`）
-  - 各ルートの `route.tsx` は、そのパスに対応するコンポーネントとハンドラ（loader, action 等）を定義するファイルである
   - フォルダ名ルール:
+    - ファイルベースルーティングを使用する
+    - フォルダ名が URL パスを表す（例: `routes/_auth.todo/route.tsx` → `/todo`）
+    - 各ルートの `route.tsx` は、そのパスに対応するコンポーネントとハンドラ（loader, action 等）を定義するファイルである  
     1. フォルダ名の先頭に `_` が付く場合 → その部分は URL パスには表示されないが、ルートは実行される（例: `_auth`）
     2. フォルダ名の末尾に `_` が付く場合 → その部分は URL パスには表示されず、ルートも実行されない（ただしネスト構造上は存在する）
-  - 例: `routes/_auth.todo_.create/route.tsx`
-    - パスは `/todo/create` となる
-    - `_auth` は実行される（認証処理など）
-    - `todo` は実行されない
-    - `create` が最終ルートとして実行される
+    - `routes/_auth.todo_.create/route.tsx`このフォルダ名だと下記のようになる
+      - パスは `/todo/create` となる
+      - `_auth`と`create` は実行される
+      - `todo` は実行されない
 - api
   - スキーマファーストでPothosを使用
 
