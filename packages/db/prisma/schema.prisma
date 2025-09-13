@@ -39,13 +39,28 @@ model Todo {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  password  String
-  name      String?
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   // bcrypt/argon2
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  @@index([email])
+  sessions     Session[]
+}
+
+model Session {
+  id         String   @id // ランダム32B(hex)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  csrfSecret String
+  userAgent  String?
+  ip         String?
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+  revokedAt  DateTime?
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([revokedAt])
 }
 
