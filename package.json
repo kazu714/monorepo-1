@@ -12,7 +12,8 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "test": "turbo test",
-    "generate": "turbo run generate --env-mode=loose"
+    "generate": "turbo run generate --env-mode=loose",
+    "migrate:reset": "turbo run migrate:reset"
   },
   "keywords": [],
   "author": "",

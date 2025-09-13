@@ -9,6 +9,7 @@
     },
     "lint": { "outputs": [] },
     "test": { "dependsOn": ["build"], "outputs": [] },
+    "migrate:reset": { "cache": false },
     "generate": { "cache": false }
   }
 }
