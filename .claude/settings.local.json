@@ -6,7 +6,8 @@
       "Bash(pnpm run:*)",
       "Bash(mkdir:*)",
       "Bash(pnpm install:*)",
-      "Bash(pnpm prisma migrate:*)"
+      "Bash(pnpm prisma migrate:*)",
+      "Bash(pnpm add:*)"
     ],
     "deny": [],
     "ask": [],

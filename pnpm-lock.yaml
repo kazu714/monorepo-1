@@ -20,12 +20,24 @@ importers:
       '@pothos/core':
         specifier: ^4.8.1
         version: 4.8.1(graphql@16.9.0)
+      '@pothos/plugin-simple-objects':
+        specifier: ^4.1.3
+        version: 4.1.3(@pothos/core@4.8.1(graphql@16.9.0))(graphql@16.9.0)
       '@prisma/client':
         specifier: ^6.14.0
         version: 6.14.0(prisma@6.14.0(typescript@5.9.2))(typescript@5.9.2)
+      '@types/bcrypt':
+        specifier: ^6.0.0
+        version: 6.0.0
+      bcrypt:
+        specifier: ^6.0.0
+        version: 6.0.0
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
+      graphql-scalars:
+        specifier: ^1.24.2
+        version: 1.24.2(graphql@16.9.0)
       graphql-yoga:
         specifier: ^5.6.0
         version: 5.6.0(graphql@16.9.0)
@@ -558,6 +570,12 @@ packages:
       graphql: ^16.10.0
       typescript: '>=4.7.2'
 
+  '@pothos/plugin-simple-objects@4.1.3':
+    resolution: {integrity: sha512-D2JFecUY9a8VwplsNidEYlws2nYGjABIk8WNykHYuBoTPK6mngQfgY5Og8VL+a3sU/Z3pof5qz+Eg+6GJ4j7lw==}
+    peerDependencies:
+      '@pothos/core': '*'
+      graphql: ^16.10.0
+
   '@prisma/client@6.14.0':
     resolution: {integrity: sha512-8E/Nk3eL5g7RQIg/LUj1ICyDmhD053STjxrPxUtCRybs2s/2sOEcx9NpITuAOPn07HEpWBfhAVe1T/HYWXUPOw==}
     engines: {node: '>=18.18'}
@@ -849,6 +867,9 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7
 
+  '@types/bcrypt@6.0.0':
+    resolution: {integrity: sha512-/oJGukuH3D2+D+3H4JWLaAsJ/ji86dhRidzZ/Od7H/i8g+aCmvkeCc6Ni/f9uxGLSQVCRZkX2/lqEFG2BvWtlQ==}
+
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
@@ -937,6 +958,10 @@ packages:
   basic-auth@2.0.1:
     resolution: {integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==}
     engines: {node: '>= 0.8'}
+
+  bcrypt@6.0.0:
+    resolution: {integrity: sha512-cU8v/EGSrnH+HnxV2z0J7/blxH8gq7Xh2JFT6Aroax7UohdmiJJlxApMxtKfuI7z68NvvVcmR78k2LbT6efhRg==}
+    engines: {node: '>= 18'}
 
   body-parser@1.20.3:
     resolution: {integrity: sha512-7rAxByjUMqQ3/bHJy7D6OGXvx/MMc4IqBn/X0fcM1QUcAItpZrBEYhWGem+tzXH90c+G01ypMcYJBO9Y30203g==}
@@ -1296,6 +1321,12 @@ packages:
     peerDependencies:
       graphql: 14 - 16
 
+  graphql-scalars@1.24.2:
+    resolution: {integrity: sha512-FoZ11yxIauEnH0E5rCUkhDXHVn/A6BBfovJdimRZCQlFCl+h7aVvarKmI15zG4VtQunmCDdqdtNs6ixThy3uAg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
   graphql-yoga@5.6.0:
     resolution: {integrity: sha512-MqzHRPmiMSilYLDbJtAnXN7oyggd446a4F9dyj/H4gCmM/3YllCYw3vtKcmsykorsfiSKCYpCf5CimNXIVaHHg==}
     engines: {node: '>=18.0.0'}
@@ -1530,8 +1561,16 @@ packages:
     resolution: {integrity: sha512-myRT3DiWPHqho5PrJaIRyaMv2kgYf0mUVgBNOYMuCH5Ki1yEiQaf/ZJuQ62nvpc44wL5WDbTX7yGJi1Neevw8w==}
     engines: {node: '>= 0.6'}
 
+  node-addon-api@8.5.0:
+    resolution: {integrity: sha512-/bRZty2mXUIFY/xU5HLvveNHlswNJej+RnxBjOMkidWfwZzgTbPG1E3K5TOxRLOR+5hX7bSofy8yf1hZevMS8A==}
+    engines: {node: ^18 || ^20 || >= 21}
+
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
+
+  node-gyp-build@4.8.4:
+    resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
+    hasBin: true
 
   node-releases@2.0.19:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
@@ -2464,6 +2503,11 @@ snapshots:
       graphql: 16.9.0
       typescript: 5.9.2
 
+  '@pothos/plugin-simple-objects@4.1.3(@pothos/core@4.8.1(graphql@16.9.0))(graphql@16.9.0)':
+    dependencies:
+      '@pothos/core': 4.8.1(graphql@16.9.0)
+      graphql: 16.9.0
+
   '@prisma/client@6.14.0(prisma@6.14.0(typescript@5.9.2))(typescript@5.9.2)':
     optionalDependencies:
       prisma: 6.14.0(typescript@5.9.2)
@@ -2733,6 +2777,10 @@ snapshots:
       tailwindcss: 4.1.12
       vite: 6.3.5(@types/node@20.19.11)(jiti@2.5.1)(lightningcss@1.30.1)(tsx@4.20.4)
 
+  '@types/bcrypt@6.0.0':
+    dependencies:
+      '@types/node': 20.19.11
+
   '@types/estree@1.0.8': {}
 
   '@types/node@20.19.11':
@@ -2837,6 +2885,11 @@ snapshots:
   basic-auth@2.0.1:
     dependencies:
       safe-buffer: 5.1.2
+
+  bcrypt@6.0.0:
+    dependencies:
+      node-addon-api: 8.5.0
+      node-gyp-build: 4.8.4
 
   body-parser@1.20.3:
     dependencies:
@@ -3231,6 +3284,11 @@ snapshots:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
       graphql: 16.9.0
 
+  graphql-scalars@1.24.2(graphql@16.9.0):
+    dependencies:
+      graphql: 16.9.0
+      tslib: 2.8.1
+
   graphql-yoga@5.6.0(graphql@16.9.0):
     dependencies:
       '@envelop/core': 5.3.0
@@ -3415,7 +3473,11 @@ snapshots:
 
   negotiator@0.6.4: {}
 
+  node-addon-api@8.5.0: {}
+
   node-fetch-native@1.6.7: {}
+
+  node-gyp-build@4.8.4: {}
 
   node-releases@2.0.19: {}
 
