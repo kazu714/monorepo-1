@@ -1,10 +1,16 @@
 # claude codeへの指示
 - 回答やtodoリスト等は全て日本語にしてください
+  - 文字コードはUTF-8を使用してください
 
 # プロジェクト基本情報
 
 ## アーキテクチャ
-このプロジェクトはpnpm workspaceによるモノレポ構成です。
+- このプロジェクトはpnpm workspaceによるモノレポ構成です。
+- 3層アーキテクチャで、下記の技術構成です
+  - フロントエンド(web)はreact router
+  - バックエンド（api）はnode.jsでgraphql
+  - db（packages/db）はmysql
+
 
 ### 技術スタック
 - **Frontend (web)**: React + React Router v7
@@ -51,6 +57,7 @@ monorepo-1/
       - パスは `/todo/create` となる
       - `_auth`と`create` は実行される
       - `todo` は実行されない
+  - webでgraphqlを定義するときは、`import { gql } from "graphql-request"; `を使用してください
 - api
   - スキーマファーストでPothosを使用
 
