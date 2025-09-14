@@ -52,15 +52,15 @@ model Session {
   id         String   @id // ランダム32B(hex)
   userId     String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  csrfSecret String
-  userAgent  String?
-  ip         String?
+  // csrfSecret String
+  // userAgent  String?
+  // ip         String?
   createdAt  DateTime @default(now())
   expiresAt  DateTime
-  revokedAt  DateTime?
+  // revokedAt  DateTime?
 
   @@index([userId])
   @@index([expiresAt])
-  @@index([revokedAt])
+  // @@index([revokedAt])
 }
 
