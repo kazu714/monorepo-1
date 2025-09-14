@@ -24,8 +24,11 @@ interface Session {
 }
 
 // ログイン処理
-export const login = async (email: string, password: string, request: Request) => {
-  console.log("login関数が呼ばれた")
+export const login = async (
+  email: string,
+  password: string,
+  request: Request
+) => {
   try {
     const CREATE_SESSION_MUTATION = gql`
       mutation CreateSession($input: LoginInput!) {
@@ -35,10 +38,9 @@ export const login = async (email: string, password: string, request: Request) =
       }
     `;
 
-    const response = await graphqlClient.request(CREATE_SESSION_MUTATION, {
-      input: { email, password }
-    }) as any;
-    console.log("レスポンス",response)
+    const response = (await graphqlClient.request(CREATE_SESSION_MUTATION, {
+      input: { email, password },
+    })) as any;
     const { createSession } = response;
 
     // 現在のリクエストからセッションを取得
@@ -46,7 +48,6 @@ export const login = async (email: string, password: string, request: Request) =
 
     // セッションに sessionId を保存
     session.set("sessionId", createSession.sessionId);
-    console.log("セッションに保存したよ",session.get("sessionId"))
     // Cookie付きレスポンスを返す
     return redirect("/todos", {
       headers: {
@@ -60,7 +61,9 @@ export const login = async (email: string, password: string, request: Request) =
 };
 
 // セッションIDを取得
-export const getSessionId = async (request: Request): Promise<string | null> => {
+export const getSessionId = async (
+  request: Request
+): Promise<string | null> => {
   const session = await getSession(request.headers.get("Cookie"));
   return session.get("sessionId") || null;
 };
@@ -76,12 +79,32 @@ export const logout = async (request: Request) => {
 };
 
 // 認証が必要なページでの認証チェック
-export const require_auth = async (request: Request) => {
+export const ensureSession = async (request: Request) => {
   const sessionId = await getSessionId(request);
-  
+
   if (!sessionId) {
-    throw redirect('/login');
+    throw redirect("/login");
   }
 
-  return { sessionId };
+  const SESSION_QUERY = gql`
+    query GetSession($id: String!) {
+      session(id: $id) {
+        id
+        user {
+          id
+          email
+        }        
+        expiresAt
+      }
+    }
+  `;
+
+  const { session } = (await graphqlClient.request(SESSION_QUERY, {
+    id: sessionId,
+  })) as any;
+
+  if (!session) {
+    throw redirect("/login");
+  }
+  return { session };
 };
