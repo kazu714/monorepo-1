@@ -71,6 +71,17 @@ export const getSessionId = async (
 // ログアウト処理
 export const logout = async (request: Request) => {
   const session = await getSession(request.headers.get("Cookie"));
+
+  const deleteSessionMutation = gql`
+    mutation DeleteSession($sessionId: String!) {
+      deleteSession(sessionId: $sessionId)
+    }
+  `;
+
+  await graphqlClient.request(deleteSessionMutation, {
+    sessionId: session.get("sessionId"),
+  });
+
   return redirect("/login", {
     headers: {
       "Set-Cookie": await destroySession(session),

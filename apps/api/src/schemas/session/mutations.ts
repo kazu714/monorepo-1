@@ -57,3 +57,21 @@ builder.mutationField('createSession', (t) =>
     }
   })
 );
+
+builder.mutationField('deleteSession', (t) =>
+  t.field({
+    type: 'Boolean',
+    args: {
+      sessionId: t.arg.string({ required: true })
+    },
+    resolve: async (parent, { sessionId }, { prisma }) => {
+      const result = await prisma.session.deleteMany({
+        where: { id: sessionId }  
+      });
+
+      console.log("deleteSession result:", result);
+
+      return result.count > 0;
+    }
+  })
+);

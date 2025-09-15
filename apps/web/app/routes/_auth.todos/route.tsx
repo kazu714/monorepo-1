@@ -14,7 +14,7 @@ import {
 import { graphqlClient } from "~/util/graphql";
 import { gql } from "graphql-request";
 import { useState } from "react";
-import { ensureSession } from "~/util/auth.server";
+import { ensureSession, logout } from "~/util/auth.server";
 
 const GET_TODOS_QUERY = gql`
   query GetTodos {
@@ -83,6 +83,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const form_data = await request.formData();
   const action_type = form_data.get("action") as string;
+
+  if (action_type === "logout") {
+    return await logout(request);
+  }
 
   if (action_type === "create") {
     const todo_title = form_data.get("title") as string;
@@ -175,7 +179,18 @@ export default function Todos() {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8">Todos</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">Todos</h1>
+        <Form method="post">
+          <input type="hidden" name="action" value="logout" />
+          <button
+            type="submit"
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+          >
+            Logout
+          </button>
+        </Form>
+      </div>
 
       <div className="mb-8">
         <Link to="/home" className="text-blue-500 hover:underline">
