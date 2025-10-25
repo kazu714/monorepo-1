@@ -13,3 +13,7 @@ import './user/model';
 import './session/model';
 import './session/queries';
 import './session/mutations';
+
+import './client/object';
+import './client/queries';
+import './client/mutations';
