@@ -1,12 +1,12 @@
-import { createServer } from 'node:http';
-import { createYoga } from 'graphql-yoga';
-import { schema } from './schema';
-import { createContext } from './context';
+import { createServer } from "node:http";
+import { createYoga } from "graphql-yoga";
+import { schema } from "./schema";
+import { createContext } from "./context";
 
 const yoga = createYoga({
   schema,
-  context: () => createContext(),
-  graphqlEndpoint: '/graphql',
+  context: (request) => createContext(request),
+  graphqlEndpoint: "/graphql",
 });
 
 const port = Number(process.env.API_PORT ?? 3001);
