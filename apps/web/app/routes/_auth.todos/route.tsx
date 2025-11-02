@@ -11,7 +11,7 @@ import {
   useNavigation,
   Link,
 } from "react-router";
-import { graphqlClient } from "~/util/graphql";
+import { getGraphQLClient } from "~/util/graphql";
 import { gql } from "graphql-request";
 import { useState } from "react";
 import { ensureSession, logout } from "~/util/auth.server";
@@ -77,10 +77,16 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await ensureSession(request);
-  return { todos: [] };
+
+  const graphqlClient = await getGraphQLClient(request);
+  const { todos } = (await graphqlClient.request(GET_TODOS_QUERY)) as any;
+
+  return { todos };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
+  const graphqlClient = await getGraphQLClient(request);
+  
   const form_data = await request.formData();
   const action_type = form_data.get("action") as string;
 

@@ -1,6 +1,6 @@
 import { createCookieSessionStorage, redirect } from "react-router";
 import { gql } from "graphql-request";
-import { graphqlClient } from "./graphql";
+import { getGraphQLClient } from "./graphql";
 
 // セッションストレージ設定
 export const sessionStorage = createCookieSessionStorage({
@@ -29,6 +29,7 @@ export const login = async (
   password: string,
   request: Request
 ) => {
+  const graphqlClient = await getGraphQLClient(request);
   try {
     const CREATE_SESSION_MUTATION = gql`
       mutation CreateSession($input: LoginInput!) {
@@ -70,6 +71,7 @@ export const getSessionId = async (
 
 // ログアウト処理
 export const logout = async (request: Request) => {
+  const graphqlClient = await getGraphQLClient(request);
   const session = await getSession(request.headers.get("Cookie"));
 
   const deleteSessionMutation = gql`
@@ -91,6 +93,7 @@ export const logout = async (request: Request) => {
 
 // 認証が必要なページでの認証チェック
 export const ensureSession = async (request: Request) => {
+  const graphqlClient = await getGraphQLClient(request);
   const sessionId = await getSessionId(request);
 
   if (!sessionId) {
