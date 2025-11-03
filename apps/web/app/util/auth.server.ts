@@ -74,21 +74,18 @@ export const getToken = async (
 // ログアウト処理
 export const logout = async (request: Request) => {
   const graphqlClient = await getGraphQLClient(request);
-  const session = await getSession(request.headers.get("Cookie"));
-
+  const sessionCookie = await getSession(request.headers.get("Cookie"));
   const deleteSessionMutation = gql`
-    mutation DeleteSession($sessionId: String!) {
-      deleteSession(sessionId: $sessionId)
+    mutation DeleteSession{
+      deleteSession
     }
   `;
-
-  await graphqlClient.request(deleteSessionMutation, {
-    sessionId: session.get("sessionId"),
-  });
+console.log("logout関数内のdeleteSessionMutationを実行します");
+  await graphqlClient.request(deleteSessionMutation);
 
   return redirect("/login", {
     headers: {
-      "Set-Cookie": await destroySession(session),
+      "Set-Cookie": await destroySession(sessionCookie),
     },
   });
 };
