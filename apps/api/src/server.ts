@@ -5,7 +5,7 @@ import { createContext } from "./context";
 
 const yoga = createYoga({
   schema,
-  context: (request) => createContext(request),
+  context: async (request) => createContext(request),
   graphqlEndpoint: "/graphql",
 });
 

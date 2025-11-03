@@ -30,29 +30,31 @@ export const login = async (
   request: Request
 ) => {
   const graphqlClient = await getGraphQLClient(request);
+  console.log("webのlogin関数が呼ばれました")
   try {
     const CREATE_SESSION_MUTATION = gql`
       mutation CreateSession($input: LoginInput!) {
         createSession(input: $input) {
-          sessionId
+          token
         }
       }
     `;
 
-    const response = (await graphqlClient.request(CREATE_SESSION_MUTATION, {
+    const { createSession } = (await graphqlClient.request(CREATE_SESSION_MUTATION, {
       input: { email, password },
     })) as any;
-    const { createSession } = response;
+
+    console.log("取得したセッション情報:", createSession);
 
     // 現在のリクエストからセッションを取得
-    const session = await getSession(request.headers.get("Cookie"));
+    const cookie = await getSession(request.headers.get("Cookie"));
 
-    // セッションに sessionId を保存
-    session.set("sessionId", createSession.sessionId);
+    // cookieに token を保存
+    cookie.set("token", createSession.token);
     // Cookie付きレスポンスを返す
     return redirect("/todos", {
       headers: {
-        "Set-Cookie": await commitSession(session),
+        "Set-Cookie": await commitSession(cookie),
       },
     });
   } catch (error) {
@@ -62,11 +64,11 @@ export const login = async (
 };
 
 // セッションIDを取得
-export const getSessionId = async (
+export const getToken = async (
   request: Request
 ): Promise<string | null> => {
   const session = await getSession(request.headers.get("Cookie"));
-  return session.get("sessionId") || null;
+  return session.get("token") || null;
 };
 
 // ログアウト処理
@@ -93,32 +95,28 @@ export const logout = async (request: Request) => {
 
 // 認証が必要なページでの認証チェック
 export const ensureSession = async (request: Request) => {
+  console.log("ensureSessionが呼ばれました");
   const graphqlClient = await getGraphQLClient(request);
-  const sessionId = await getSessionId(request);
+  const token = await getToken(request);
 
-  if (!sessionId) {
+  if (!token) {
     throw redirect("/login");
   }
-
+  console.log("session queryを実行します");
   const SESSION_QUERY = gql`
-    query GetSession($id: String!) {
-      session(id: $id) {
+    query GetUser {
+      user{
         id
-        user {
-          id
-          email
-        }        
-        expiresAt
       }
     }
   `;
 
-  const { session } = (await graphqlClient.request(SESSION_QUERY, {
-    id: sessionId,
-  })) as any;
 
-  if (!session) {
+  const { user } = (await graphqlClient.request(SESSION_QUERY)) as any;
+  console.log("取得したユーザー情報:", user);
+
+  if (!user) {
     throw redirect("/login");
   }
-  return { session };
+  return { user };
 };

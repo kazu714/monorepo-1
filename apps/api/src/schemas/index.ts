@@ -7,7 +7,7 @@ import './todo/queries';
 import './todo/mutations';
 
 import './user/model';
-// import './user/queries';
+import './user/queries';
 // import './user/mutations';
 
 import './session/model';
