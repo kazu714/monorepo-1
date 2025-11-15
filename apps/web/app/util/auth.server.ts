@@ -30,7 +30,6 @@ export const login = async (
   request: Request
 ) => {
   const graphqlClient = await getGraphQLClient(request);
-  console.log("webのlogin関数が呼ばれました")
   try {
     const CREATE_SESSION_MUTATION = gql`
       mutation CreateSession($input: LoginInput!) {
@@ -40,16 +39,14 @@ export const login = async (
       }
     `;
 
+    // sessionをdbに追加し、jwtを取得
     const { createSession } = (await graphqlClient.request(CREATE_SESSION_MUTATION, {
       input: { email, password },
     })) as any;
 
-    console.log("取得したセッション情報:", createSession);
-
     // 現在のリクエストからセッションを取得
     const cookie = await getSession(request.headers.get("Cookie"));
-
-    // cookieに token を保存
+    // cookieに token（apiで生成したjwt） を保存
     cookie.set("token", createSession.token);
     // Cookie付きレスポンスを返す
     return redirect("/todos", {
@@ -80,7 +77,6 @@ export const logout = async (request: Request) => {
       deleteSession
     }
   `;
-console.log("logout関数内のdeleteSessionMutationを実行します");
   await graphqlClient.request(deleteSessionMutation);
 
   return redirect("/login", {

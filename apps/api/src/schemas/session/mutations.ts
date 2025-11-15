@@ -46,7 +46,8 @@ builder.mutationField("createSession", (t) =>
       const sessionId = crypto.randomBytes(32).toString("hex");
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30日後
 
-      const session = await prisma.session.create({
+      // セッションをdbに保存
+      await prisma.session.create({
         data: {
           id: sessionId,
           userId: user.id,
@@ -54,7 +55,7 @@ builder.mutationField("createSession", (t) =>
         },
       });
 
-      // jwtを作成
+      // jwtを作成 （現時点ではsessionidのみをペイロードに含める）
       const payload = { sessionId: sessionId };
       const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "30d" });
 

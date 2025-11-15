@@ -4,8 +4,6 @@ import { GraphQLClient } from 'graphql-request';
 import { gql } from "graphql-request";
 import { login } from '~/util/auth.server';
 
-const client = new GraphQLClient('http://localhost:4000/graphql');
-
 const CREATE_SESSION_MUTATION = gql`
   mutation CreateSession($input: LoginInput!) {
     createSession(input: $input) {
@@ -14,15 +12,7 @@ const CREATE_SESSION_MUTATION = gql`
   }
 `;
 
-export const loader = ({ request }: LoaderFunctionArgs) => {
-  // 既にログイン済みの場合はリダイレクト
-  const url = new URL(request.url);
-  const sessionId = new URL(request.url).searchParams.get('session');
-  
-  if (sessionId) {
-    return redirect('/todo');
-  }
-  
+export const loader = ({ request }: LoaderFunctionArgs) => {  
   return null;
 };
 
