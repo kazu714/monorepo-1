@@ -88,14 +88,12 @@ export const logout = async (request: Request) => {
 
 // 認証が必要なページでの認証チェック
 export const ensureSession = async (request: Request) => {
-  console.log("ensureSessionが呼ばれました");
   const graphqlClient = await getGraphQLClient(request);
   const token = await getToken(request);
 
   if (!token) {
     throw redirect("/login");
   }
-  console.log("session queryを実行します");
   const SESSION_QUERY = gql`
     query GetUser {
       user{
@@ -104,9 +102,7 @@ export const ensureSession = async (request: Request) => {
     }
   `;
 
-
   const { user } = (await graphqlClient.request(SESSION_QUERY)) as any;
-  console.log("取得したユーザー情報:", user);
 
   if (!user) {
     throw redirect("/login");

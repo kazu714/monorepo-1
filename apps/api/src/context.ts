@@ -15,7 +15,6 @@ export async function createContext({
 }: {
   request: Request;
 }): Promise<Context> {
-  console.log("リクエストヘッダー:", request.headers);
   const authHeader = request.headers.get("authorization") ?? undefined;
   let currentUser = null;
   if (authHeader) {
@@ -27,7 +26,6 @@ export async function createContext({
     currentUser = await prisma.session.findFirst({
       where: { id: sessionId },
     });
-    console.log("現在のユーザー:", currentUser);
   }
   return { prisma, currentUser };
 }

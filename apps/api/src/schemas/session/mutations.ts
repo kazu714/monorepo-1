@@ -73,9 +73,6 @@ builder.mutationField("deleteSession", (t) =>
       const result = await prisma.session.deleteMany({
         where: { id: currentUser.sessionId },
       });
-
-      console.log("deleteSession result:", result);
-
       return result.count > 0;
     },
   })

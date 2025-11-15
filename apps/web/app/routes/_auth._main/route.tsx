@@ -2,7 +2,6 @@ import { Form, Outlet, type ActionFunctionArgs } from "react-router";
 import { logout } from "~/util/auth.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  console.log("ログアウトアクションが呼ばれました");
   return await logout(request);
 };
 
