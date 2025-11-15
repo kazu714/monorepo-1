@@ -14,7 +14,7 @@ import {
 import { getGraphQLClient } from "~/util/graphql";
 import { gql } from "graphql-request";
 import { useState } from "react";
-import { ensureSession, logout } from "~/util/auth.server";
+import { ensureSession } from "~/util/auth.server";
 
 const GET_TODOS_QUERY = gql`
   query GetTodos {
@@ -90,9 +90,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const form_data = await request.formData();
   const action_type = form_data.get("action") as string;
 
-  if (action_type === "logout") {
-    return await logout(request);
-  }
+
 
   if (action_type === "create") {
     const todo_title = form_data.get("title") as string;
@@ -166,36 +164,16 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Todos() {
-  const { todos } = useLoaderData<typeof loader>();
   const action_data = useActionData<typeof action>();
   const navigation = useNavigation();
   const is_submitting = navigation.state === "submitting";
-  const [editing_todo_id, setEditingTodoId] = useState<string | null>(null);
-  const [edit_title, setEditTitle] = useState<string>("");
 
-  const start_editing = (todo: Todo) => {
-    setEditingTodoId(todo.id);
-    setEditTitle(todo.title);
-  };
-
-  const cancel_editing = () => {
-    setEditingTodoId(null);
-    setEditTitle("");
-  };
 
   return (
     <div className="container mx-auto p-8">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Todos</h1>
-        <Form method="post">
-          <input type="hidden" name="action" value="logout" />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-          >
-            Logout
-          </button>
-        </Form>
+
       </div>
 
       <div className="mb-8">
