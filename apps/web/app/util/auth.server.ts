@@ -86,7 +86,11 @@ export const logout = async (request: Request) => {
   });
 };
 
-// 認証が必要なページでの認証チェック
+/**
+ * 認証が必要なページで、ログイン済みかのチェック
+ * @param request 
+ * @returns user
+ */
 export const ensureSession = async (request: Request) => {
   const graphqlClient = await getGraphQLClient(request);
   const token = await getToken(request);

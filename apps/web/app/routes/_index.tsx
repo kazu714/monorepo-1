@@ -1,5 +1,8 @@
-import { redirect } from "react-router"
+import { redirect, type LoaderFunctionArgs } from "react-router"
+import { ensureSession } from "~/util/auth.server"
 
-export const loader = () => {
-  return redirect("/home")
+export const loader = async ({request}: LoaderFunctionArgs) => {
+  const user = await ensureSession(request)
+  if(!user) return redirect("/login")
+  return redirect("/todos")
 }
